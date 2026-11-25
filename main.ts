@@ -20,3 +20,15 @@ if (SENTENCE.trim().length === 0) {
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", SENTENCE, "utf8");
+
+// Verify what was actually written: read it back and confirm it is
+// exactly the sentence, one sentence of 1-200 characters, with no
+// trailing newline or stray whitespace the gate would count.
+import { readFileSync } from "node:fs";
+const written = readFileSync("/output/entry.txt", "utf8");
+if (written !== SENTENCE) {
+  throw new Error("entry.txt does not match the sentence exactly.");
+}
+if (written.length < 1 || written.length > 200) {
+  throw new Error(`entry.txt is ${written.length} characters, outside 1-200.`);
+}
